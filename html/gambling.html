@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>갬블링 게임</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <h3>갬블링 게임</h3>
+  <p>각 숫자를 클릭하면 0에서 2 사이의 난수로 바뀝니다. 모두 같은 수가 나오면 승리합니다.</p>
+  <hr>
+  <div id="gambling_wrap">
+    <span id="num1" onclick="rand1()">0</span>
+    <span id="num2" onclick="rand2()">0</span>
+    <span id="num3" onclick="rand3()">0</span>
+  </div>
+  <div id="result" onclick="restart()">
+
+  </div>
+  <script src="../js/gambling_start.js"></script>
+</body>
+
+</html>

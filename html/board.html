@@ -1,0 +1,58 @@
+<!-- 직선,원,사각형 그리는 방법 확인 -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>마우스 드래깅으로 캔버스에 그림 그리기</title>
+    <link rel="stylesheet" href="../css/style.css">
+  </head>
+<body onload="init()">
+  <h3 style="text-align: center;">마우스를 누른 채 드래깅하여 그림 그려 보세요</h3>
+  <hr>
+  <div id="canvas_wrap">
+    <canvas id="myCanvas" class="canvas" style="background-color: aliceblue;" width="500px" height="400px">
+      <!-- <canvas id="otherCanvas" class="canvas" style="background-color: aliceblue;" width="500px" height="400px">
+      </canvas> -->
+    </canvas>
+    
+  </div>
+  
+  <div class="controls">
+        <div class="controls_range" onclick="upsize(e)">
+            <input 
+                type="range" 
+                id="jsRange" 
+                min="0.1" 
+                max="5.0" 
+                value="2.5" 
+                step="0.1" 
+            />
+        </div>
+        <div class="controls_btns">
+            <button id="jsMode">Fill</button>
+            <button id="jsSave">Save</button>
+            <button id="canvas_clear" onclick="paintClear()">Clear</button>
+            <br>
+            <button id="jsMode">직선</button>
+            <button id="jsMode">사각형</button>
+            <button id="jsMode">원</button>
+            
+            
+        </div>
+        <div class="controls_colors" id="jsColors">
+            <div class="controls_color jsColor" style="background-color:black" onclick="colorChange('black')"></div>
+            <div class="controls_color jsColor" style="background-color:white" onclick="colorChange('white')"></div>
+            <div class="controls_color jsColor" style="background-color:red" onclick="colorChange('red')"></div>
+            <div class="controls_color jsColor" style="background-color:orange" onclick="colorChange('orange')"></div>
+            <div class="controls_color jsColor" style="background-color:yellow" onclick="colorChange('yellow')"></div>
+            <div class="controls_color jsColor" style="background-color:darkblue" onclick="colorChange('darkblue')"></div>
+            <div class="controls_color jsColor" style="background-color:skyblue" onclick="colorChange('skyblue')"></div>
+            <div class="controls_color jsColor" style="background-color:mediumaquamarine" onclick="colorChange('mediumaquamarine')"></div>
+            <div class="controls_color jsColor" style="background-color:blue" onclick="colorChange('blue')"></div>
+        </div>
+        
+  </div>
+
+  <script src="../js/board_draw.js"></script>
+  <!-- <script src="../js/board_paint.js"></script> -->
+</body>
+</html>

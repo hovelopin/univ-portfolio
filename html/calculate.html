@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>계산기 만들기</title>
+	<script>
+		const currentValue=document.querySelector('.current-value');
+		const dot = document.querySelector('#dot');
+		const sign = document.querySelector('#sign');
+
+		dot.addEventListener('click', setDot);
+		sign.addEventListener('click', setSign);
+
+		function setDot() {
+			currentValue.innerText.indexOf('.') === -1 ?
+			currentValue.innerText = `${currentValue.innerText}.` : false;
+		}
+		function setSign() {
+			currentValue.innerText.indexOf('-') === -1 ?
+			currentValue.innerText = `-${currentValue.innerText}` :
+			currentValue.innerText = currentValue.innerText.replace('-', '');
+		}
+		function backward() {
+			var exp = document.getElementById("exp");
+			var len = exp.value.length;
+			if (len == 0)
+				return;
+			else
+				exp.value = exp.value.substr(0, len - 1);
+		}
+
+		function clearexp() {
+			var exp = document.getElementById("exp");
+			exp.value = "0";
+		}
+
+		function addInput(value) {
+			var exp = document.getElementById("exp");
+			if (exp.value == "0")
+				exp.value = value;
+			else
+				exp.value += value;
+		}
+
+		function calulate() {
+			var exp = document.getElementById("exp");
+			exp.value = eval(exp.value);
+		}
+	</script>
+	<style>
+		table {}
+
+		tr {
+			text-align: center;
+		}
+
+		td {
+			/* width: 50px; */
+		}
+
+		input[type=button] {
+			width: 70px;
+			height: 70px;
+			border: 1px solid black;
+			border-radius: 25%;
+		}
+
+		input[type=button]:hover {
+			opacity: .5;
+		}
+
+		.btn_calc_right input {
+			background-color: orange;
+		}
+
+		.btn_calc_top input {
+			background-color: gray;
+		}
+
+		#calc_result td input {
+			text-align: right;
+			font-size: 2rem;
+		}
+
+		#calc_result td {
+			/* border: 1px solid black; */
+		}
+	</style>
+</head>
+
+<body>
+	<h3>계산기 만들기</h3>
+	<hr>
+	<form>
+		<table>
+			<tr id="calc_result">
+				<td colspan="4"><input type="text" id="exp" value="0" size="35"></td>
+			</tr>
+			<tr>
+				<td class="btn_calc_top"><input type="button" id="back" value="BACK" onclick="backward()"></td>
+				<td class="btn_calc_top"><input type="button" id="ce" value="CE" onclick="clearexp()"></td>
+				<td class="btn_calc_top"><input type="button" id="c" value="C" onclick="clearexp()"></td>
+				<td class="btn_calc_right"><input type="button" id="equal" value="=" onclick="calulate()"></td>
+			</tr>
+			<tr>
+				<td><input type="button" id="seven" value="7" onclick="addInput(this.value)"></td>
+				<td><input type="button" id="eight" value="8" onclick="addInput(this.value)"></td>
+				<td><input type="button" id="nine" value="9" onclick="addInput(this.value)"></td>
+				<td class="btn_calc_right"><input type="button" id="div" value="/" onclick="addInput(this.value)"></td>
+			</tr>
+			<tr>
+				<td><input type="button" id="four" value="4" onclick="addInput(this.value)"></td>
+				<td><input type="button" id="five" value="5" onclick="addInput(this.value)"></td>
+				<td><input type="button" id="six" value="6" onclick="addInput(this.value)"></td>
+				<td class="btn_calc_right"><input type="button" id="mul" value="X" onclick="addInput(this.value)"></td>
+			</tr>
+			<tr>
+				<td><input type="button" id="one" value="1" onclick="addInput(this.value)"></td>
+				<td><input type="button" id="two" value="2" onclick="addInput(this.value)"></td>
+				<td><input type="button" id="three" value="3" onclick="addInput(this.value)"></td>
+				<td class="btn_calc_right current-value"><input type="button" id="minus" value="-" onclick="addInput(this.value)"></td>
+			</tr>
+			<tr>
+				<td><input type="button" id="zero" value="0" onclick="addInput(this.value)"></td>
+				<td><input type="button" id="dot" value="."></td>
+				<td><input type="button" id="sign" value="+/-"></td>
+				<td class="btn_calc_right current-value"><input type="button" id="plus" value="+" onclick="addInput(this.value)"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+
+</html>

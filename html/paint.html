@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>그림판</title>
+  <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+</head>
+
+<body onload="init()">
+  style="text-align: center; width: 100%; background-color: #66aaf7; font-family: 'Do Hyeon', sans-serif ">
+
+  <h1 style="text-align: center; color: white; text-shadow: 1px 1px 7px black;">그림판</h1>
+  <canvas id="paint2" width="400" height="300"
+    style="background-color:aliceblue; display: block; margin-left: 37%; position: absolute;"></canvas>
+  <canvas id="paint" width="400" height="300"
+    style="background-color:aliceblue; display: block; margin-left: 37%; background:transparent;  position: absolute;"></canvas>
+
+
+  <form>
+
+    <table style="margin: auto; margin-top: 28%; text-align: center; padding-top: 10px;">
+      <tr>
+        <td><input type="button" id="canversclear" value="전체 지우기" onclick="cvrclear()"
+            style="border-radius: 5px; border:1px;"></td>
+        <td><img src="images/red.png" width="35px" height="35px" onclick="change('red')"></td>
+        <td><img src="images/orange.png" width="35px" height="35px" onclick="change('orange')"></td>
+        <td><img src="images/yellow.png" width="35px" height="35px" onclick="change('yellow')"></td>
+        <td><img src="images/green.png" width="35px" height="35px" onclick="change('green')"></td>
+        <td><img src="images/blue.png" width="35px" height="35px" onclick="change('blue')"></td>
+        <td><img src="images/darkblue.png" width="35px" height="35px" onclick="change('darkblue')"></td>
+        <td><img src="images/purple.png" width="35px" height="35px" onclick="change('purple')"></td>
+        <td><img src="images/white.png" width="35px" height="35px" onclick="change('white')"></td>
+        <td><img src="images/black.png" width="35px" height="35px" onclick="change('black')"></td>
+      </tr>
+    </table>
+    <table style="margin: auto; text-align: center;">
+      <tr>
+        <td><span style="color:white">자유로운 색 선택</span><input type="color" value="#00BFF" id="vcolor"></td>
+        <td><input type="button" value="색 적용" onclick="change(vcolor.value)" style="border-radius: 5px; border:1px;">
+        </td>
+        <td><input type="number" min="1" max="4" step="0.5" value="1" onclick="changeline(this.value)"></td>
+      </tr>
+    </table>
+    <table style="margin: auto; text-align: center;">
+      <tr>
+        <td><input type="button" value="직선" onclick="drawLinebutton('2')" style="border-radius: 5px; border:1px;"></td>
+        <td><input type="button" value="사각형" onclick="drawLinebutton('3')" style="border-radius: 5px; border:1px;"></td>
+        <td><input type="button" value="타원" onclick="drawLinebutton('4')" style="border-radius: 5px; border:1px;"></td>
+        <td><input type="button" value="곡선" onclick="drawLinebutton('5')" style="border-radius: 5px; border:1px;"></td>
+        <td><input type="button" value="선" onclick="drawLinebutton('1')" style="border-radius: 5px; border:1px;"></td>
+      </tr>
+    </table>
+  </form>
+
+  <script>
+    var canvas;
+    var context;
+    var buffcanvas;
+    var buffcontext;
+    var d = 1;
+    var i = 1;
+    var firstX, firstY;
+    var curX, curY;
+
+
+    function init() {
+      canvas = document.getElementById("paint");
+      context = canvas.getContext("2d");
+      buffcanvas = document.getElementById("paint2");
+      buffcontext = buffcanvas.getContext("2d");
+
+
+      context.lineWidth = 2;
+      context.strokeStyle = "black";
+
+      buffcanvas.style.borderRadius = 5 + "px";
+
+
+      canvas.style.borderRadius = 5 + "px";
+      canvas.style.boxShadow = 5 + "px" + " " + 5 + "px" + " " + 7 + "px" + " " + "black";
+      canvas.addEventListener("mousemove", function (e) { move(e) }, false);
+      canvas.addEventListener("mousedown", function (e) { down(e) }, false);
+      canvas.addEventListener("mouseup", function (e) { up(e) }, false);
+      canvas.addEventListener("mouseout", function (e) { out(e) }, false);
+
+
+    }
+
+    var startX = 0, startY = 0;
+    var dragging = false;
+
+    function draw(curX, curY) {
+
+      context.beginPath();
+      context.moveTo(startX, startY);
+      context.lineTo(curX, curY);
+      context.stroke();
+
+      buffcontext.beginPath();
+      buffcontext.moveTo(startX, startY);
+      buffcontext.lineTo(curX, curY);
+      buffcontext.stroke();
+
+
+
+    }
+
+    function drawLinebutton(e) {
+      d = e;
+    }
+    //직선 드로잉
+    function FdrawLine(curX, curY) {
+
+      buffcontext.drawImage(canvas, 0, 0);
+      buffcontext.beginPath();
+      buffcontext.moveTo(firstX, firstY);
+      buffcontext.lineTo(curX, curY);
+      buffcontext.stroke();
+
+
+
+    }
+    //직선 드로잉2
+    function FdrawLine2(curX, curY) {
+
+      buffcontext.drawImage(canvas, 0, 0);
+      buffcontext.beginPath();
+      buffcontext.moveTo(firstX, firstY);
+      buffcontext.lineTo(curX, curY);
+      buffcontext.stroke();
+      lastX = firstX; lastY = firstY;
+      currX = curX; currY = curY;
+
+
+    }
+    //사각형 드로잉
+    function Fdrawquadr(curX, curY) {
+
+      buffcontext.drawImage(canvas, 0, 0);
+      buffcontext.beginPath();
+      buffcontext.rect(firstX, firstY, curX - firstX, curY - firstY);
+      buffcontext.stroke();
+
+
+
+    }
+
+    //타원 드로잉
+    function Fdrawcir(curX, curY) {
+
+      buffcontext.drawImage(canvas, 0, 0);
+      buffcontext.beginPath();
+      var x = Math.round((firstX + curX) / 2);
+      var y = Math.round((firstY + curY) / 2);
+      var a = Math.round(Math.abs(curX - firstX) / 2);
+      var b = Math.round(Math.abs(curY - firstY) / 2);
+      buffcontext.ellipse(x, y, a, b, 0, 0, 2 * Math.PI);
+      buffcontext.stroke();
+
+
+
+    }
+
+    //곡선 드로잉
+    function Fdrawcurve(curX, curY) {
+
+      buffcontext.drawImage(canvas, 0, 0);
+      buffcontext.beginPath();
+      buffcontext.moveTo(lastX, lastY);
+      buffcontext.quadraticCurveTo(curX, curY, currX, currY);
+      buffcontext.stroke();
+
+
+      //buffcontext.quadraticCurveTo(x,x,curX,curY)
+
+
+
+    }
+
+    function move(e) {
+      if (!dragging) return;
+      //선 드로잉
+      if (d == 1) {
+        curX = e.offsetX, curY = e.offsetY;
+        draw(curX, curY);
+        startX = curX;
+        startY = curY;
+      }
+      //직선 드로잉
+      if (d == 2 && dragging == true) {
+        curX = e.offsetX, curY = e.offsetY;
+        if (i == 2) {
+          buffcontext.clearRect(0, 0, buffcanvas.width, buffcanvas.height);
+          FdrawLine(curX, curY);
+        }
+      }
+      //사각형 드로잉
+      else if (d == 3 && dragging == true) {
+        curX = e.offsetX, curY = e.offsetY;
+        if (i == 2) {
+          buffcontext.clearRect(0, 0, buffcanvas.width, buffcanvas.height);
+          Fdrawquadr(curX, curY);
+        }
+      }
+      //타원 드로잉
+      else if (d == 4 && dragging == true) {
+        curX = e.offsetX, curY = e.offsetY;
+        if (i == 2) {
+          buffcontext.clearRect(0, 0, buffcanvas.width, buffcanvas.height);
+          Fdrawcir(curX, curY);
+        }
+      }
+      // 곡선 드로잉
+      else if (d == 5 && dragging == true) {
+        curX = e.offsetX, curY = e.offsetY;
+        var currX, currY, lastX, lastY;
+        if (i == 2) {
+          buffcontext.clearRect(0, 0, buffcanvas.width, buffcanvas.height);
+          FdrawLine2(curX, curY);
+
+        }
+        if (i == 3) {
+          buffcontext.clearRect(0, 0, buffcanvas.width, buffcanvas.height);
+          Fdrawcurve(curX, curY);
+        }
+      }
+    }
+
+    function down(e) {
+
+      startX = e.offsetX;
+      startY = e.offsetY;
+
+      dragging = true;
+      //직선 드로잉
+      if (d == 2) {
+
+        if (i == 1) {
+
+          firstX = e.offsetX;
+          firstY = e.offsetY;
+          i++
+        }
+      }
+      //사각형 드로잉
+      else if (d == 3) {
+
+        if (i == 1) {
+
+          firstX = e.offsetX;
+          firstY = e.offsetY;
+          i++
+        }
+      }
+
+      //타원 드로잉
+      else if (d == 4) {
+
+        if (i == 1) {
+
+          firstX = e.offsetX;
+          firstY = e.offsetY;
+          i++
+        }
+      }
+
+      //곡선 드로잉
+      else if (d == 5) {
+
+        if (i == 1) {
+
+          firstX = e.offsetX;
+          firstY = e.offsetY;
+          i++
+        }
+        else if (i == 2) {
+          i++
+        }
+      }
+    }
+
+    function up(e) {
+      dragging = false;
+      //직선 드로잉
+      if (d == 2) {
+        context.drawImage(buffcanvas, 0, 0);
+        i = 1;
+      }
+      //사각형 드로잉
+      else if (d == 3) {
+        context.drawImage(buffcanvas, 0, 0);
+        i = 1;
+      }
+      //타원 드로잉
+      else if (d == 4) {
+        context.drawImage(buffcanvas, 0, 0);
+        i = 1;
+      }
+      //곡선 드로잉
+      else if (d == 5) {
+
+        if (d == 5 && i == 3) {
+          context.drawImage(buffcanvas, 0, 0);
+          i = 1;
+        }
+
+      }
+    }
+
+    function out(e) {
+      dragging = false;
+    }
+
+    function change(color) {
+
+      if (color == 'red') {
+        context.strokeStyle = color;
+        buffcontext.strokeStyle = color;
+      }
+      else if (color == 'orange') {
+        context.strokeStyle = color;
+        buffcontext.strokeStyle = color;
+      }
+      else if (color == 'yellow') {
+        context.strokeStyle = color;
+        buffcontext.strokeStyle = color;
+      }
+      else if (color == 'green') {
+        context.strokeStyle = color;
+        buffcontext.strokeStyle = color;
+      }
+      else if (color == 'blue') {
+        context.strokeStyle = color;
+        buffcontext.strokeStyle = color;
+      }
+      else if (color == 'darkblue') {
+        context.strokeStyle = color;
+        buffcontext.strokeStyle = color;
+      }
+      else if (color == 'purple') {
+        context.strokeStyle = color;
+        buffcontext.strokeStyle = color;
+      }
+      else if (color == 'white') {
+        context.strokeStyle = color;
+        buffcontext.strokeStyle = color;
+      }
+      else if (color == 'black') {
+        context.strokeStyle = color;
+        buffcontext.strokeStyle = color;
+      }
+      else {
+        context.strokeStyle = color;
+        buffcontext.strokeStyle = color;
+      }
+
+    }
+
+    function cvrclear() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      buffcontext.clearRect(0, 0, buffcanvas.width, buffcanvas.height)
+    }
+
+    function changeline(e) {
+      context.lineWidth = e;
+      buffcontext.lineWidth = e;
+
+    }
+
+  </script>
+
+</body>
+
+</html>
